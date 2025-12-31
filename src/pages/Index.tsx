@@ -1,11 +1,30 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Country } from "@/data/countries";
+import { CountrySelector } from "@/components/CountrySelector";
+import { CountdownScreen } from "@/components/CountdownScreen";
+import backgroundImage from "@/assets/2025_image.jpg";
 
 const Index = () => {
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat relative"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/40" />
+
+      {/* Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center">
+        {selectedCountry ? (
+          <CountdownScreen
+            country={selectedCountry}
+            onBack={() => setSelectedCountry(null)}
+          />
+        ) : (
+          <CountrySelector onSelect={setSelectedCountry} />
+        )}
       </div>
     </div>
   );
