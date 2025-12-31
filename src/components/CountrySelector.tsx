@@ -16,9 +16,14 @@ export function CountrySelector({ onSelect }: CountrySelectorProps) {
 
   const filteredCountries = useMemo(() => {
     if (!search) return countries;
-    return countries.filter((c) =>
-      c.name.toLowerCase().includes(search.toLowerCase())
-    );
+    const searchLower = search.toLowerCase();
+    return countries.filter((c) => {
+      // Search in name
+      if (c.name.toLowerCase().includes(searchLower)) return true;
+      // Search in searchTerms if available
+      if (c.searchTerms?.some(term => term.toLowerCase().includes(searchLower))) return true;
+      return false;
+    });
   }, [search]);
 
   const handleSelect = (country: Country) => {
