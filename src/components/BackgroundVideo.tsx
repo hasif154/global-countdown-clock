@@ -1,24 +1,32 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useImperativeHandle, forwardRef } from "react";
 import countdownBgVideo from "@/assets/countdown_background.mp4";
 
-export function BackgroundVideo() {
+export interface BackgroundVideoRef {
+  unmute: () => void;
+  mute: () => void;
+}
+
+export const BackgroundVideo = forwardRef<BackgroundVideoRef>((_props, ref) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isMuted, setIsMuted] = useState(true);
-  const [showPrompt, setShowPrompt] = useState(true);
+
+  useImperativeHandle(ref, () => ({
+    unmute: () => {
+      if (videoRef.current) {
+        videoRef.current.muted = false;
+      }
+    },
+    mute: () => {
+      if (videoRef.current) {
+        videoRef.current.muted = true;
+      }
+    },
+  }));
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch(console.error);
     }
   }, []);
-
-  const handleEnableSound = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = false;
-      setIsMuted(false);
-      setShowPrompt(false);
-    }
-  };
 
   return (
     <div className="fixed inset-0 z-0">
@@ -27,22 +35,14 @@ export function BackgroundVideo() {
         src={countdownBgVideo}
         className="w-full h-full object-cover"
         loop
-        muted={isMuted}
+        muted
         playsInline
         autoPlay
       />
       {/* Dark overlay for better text readability */}
       <div className="absolute inset-0 bg-black/40" />
-      
-      {/* Sound enable prompt */}
-      {showPrompt && (
-        <button
-          onClick={handleEnableSound}
-          className="absolute bottom-6 right-6 z-20 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm hover:bg-white/30 transition-all animate-pulse"
-        >
-          🔊 Tap to enable sound
-        </button>
-      )}
     </div>
   );
-}
+});
+
+BackgroundVideo.displayName = "BackgroundVideo";
