@@ -24,6 +24,7 @@ export function MidnightVideo({ onVideoEnd, soundEnabled = false }: MidnightVide
         className="w-full h-full object-cover"
         onEnded={onVideoEnd}
         playsInline
+        autoPlay
         muted={!soundEnabled}
       />
     </div>

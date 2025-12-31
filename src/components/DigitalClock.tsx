@@ -1,6 +1,6 @@
 import { useCountdownTime } from "@/hooks/useCountdownTime";
 import { Country } from "@/data/countries";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface DigitalClockProps {
   country: Country;
@@ -20,9 +20,25 @@ export function DigitalClock({
   const { days, hours, minutes, seconds, totalSeconds, isPastMidnight } =
     useCountdownTime(country.timezone);
 
-  // Trigger 6 seconds callback
+  const finalCountdownTriggeredRef = useRef(false);
+  const lastTotalSecondsRef = useRef<number | null>(null);
+
+  // Trigger final countdown when we cross down to 6 seconds remaining.
   useEffect(() => {
-    if (totalSeconds === 6 && !hasCelebrated) {
+    if (hasCelebrated) return;
+
+    const last = lastTotalSecondsRef.current;
+    lastTotalSecondsRef.current = totalSeconds;
+
+    if (finalCountdownTriggeredRef.current) return;
+
+    const crossedToSix =
+      last !== null && last > 6 && totalSeconds <= 6 && totalSeconds > 0;
+    const exactlySix = totalSeconds === 6;
+
+    if (exactlySix || crossedToSix) {
+      finalCountdownTriggeredRef.current = true;
+      console.log("Triggering final countdown video at", totalSeconds, "seconds remaining");
       onSixSecondsLeft();
     }
   }, [totalSeconds, hasCelebrated, onSixSecondsLeft]);

@@ -24,6 +24,7 @@ export function FinalCountdownVideo({ onVideoEnd, soundEnabled = false }: FinalC
         className="w-full h-full object-cover"
         onEnded={onVideoEnd}
         playsInline
+        autoPlay
         muted={!soundEnabled}
       />
     </div>
