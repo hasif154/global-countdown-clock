@@ -25,6 +25,7 @@ const Index = () => {
           <CountdownScreen
             country={selectedCountry}
             onBack={() => setSelectedCountry(null)}
+            soundEnabled={soundEnabled}
           />
         ) : (
           <CountrySelector onSelect={setSelectedCountry} />

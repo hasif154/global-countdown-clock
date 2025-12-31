@@ -3,16 +3,18 @@ import finalCountdownVideo from "@/assets/final_countdown.mp4";
 
 interface FinalCountdownVideoProps {
   onVideoEnd: () => void;
+  soundEnabled?: boolean;
 }
 
-export function FinalCountdownVideo({ onVideoEnd }: FinalCountdownVideoProps) {
+export function FinalCountdownVideo({ onVideoEnd, soundEnabled = false }: FinalCountdownVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (videoRef.current) {
+      videoRef.current.muted = !soundEnabled;
       videoRef.current.play().catch(console.error);
     }
-  }, []);
+  }, [soundEnabled]);
 
   return (
     <div className="fixed inset-0 z-50 bg-black animate-fade-in">
@@ -22,7 +24,7 @@ export function FinalCountdownVideo({ onVideoEnd }: FinalCountdownVideoProps) {
         className="w-full h-full object-cover"
         onEnded={onVideoEnd}
         playsInline
-        muted={false}
+        muted={!soundEnabled}
       />
     </div>
   );

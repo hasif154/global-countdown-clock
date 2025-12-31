@@ -9,9 +9,10 @@ import { ArrowLeft } from "lucide-react";
 interface CountdownScreenProps {
   country: Country;
   onBack: () => void;
+  soundEnabled?: boolean;
 }
 
-export function CountdownScreen({ country, onBack }: CountdownScreenProps) {
+export function CountdownScreen({ country, onBack, soundEnabled = false }: CountdownScreenProps) {
   const [showFinalCountdown, setShowFinalCountdown] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [hasCelebrated, setHasCelebrated] = useState(false);
@@ -37,10 +38,10 @@ export function CountdownScreen({ country, onBack }: CountdownScreenProps) {
   return (
     <>
       {showFinalCountdown && (
-        <FinalCountdownVideo onVideoEnd={handleFinalCountdownEnd} />
+        <FinalCountdownVideo onVideoEnd={handleFinalCountdownEnd} soundEnabled={soundEnabled} />
       )}
 
-      {showCelebration && <MidnightVideo onVideoEnd={handleCelebrationEnd} />}
+      {showCelebration && <MidnightVideo onVideoEnd={handleCelebrationEnd} soundEnabled={soundEnabled} />}
 
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4">
         <Button
