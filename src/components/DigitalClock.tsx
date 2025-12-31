@@ -7,6 +7,7 @@ interface DigitalClockProps {
   onSixSecondsLeft: () => void;
   onMidnight: () => void;
   hasCelebrated: boolean;
+  hideClock?: boolean;
 }
 
 export function DigitalClock({
@@ -14,6 +15,7 @@ export function DigitalClock({
   onSixSecondsLeft,
   onMidnight,
   hasCelebrated,
+  hideClock = false,
 }: DigitalClockProps) {
   const { days, hours, minutes, seconds, totalSeconds, isPastMidnight } =
     useCountdownTime(country.timezone);
@@ -33,6 +35,8 @@ export function DigitalClock({
   }, [isPastMidnight, hasCelebrated, onMidnight]);
 
   const pad = (n: number) => n.toString().padStart(2, "0");
+
+  if (hideClock) return null;
 
   return (
     <div className="flex flex-col items-center">

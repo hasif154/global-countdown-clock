@@ -57,6 +57,7 @@ export function CountdownScreen({ country, onBack }: CountdownScreenProps) {
           onSixSecondsLeft={handleSixSecondsLeft}
           onMidnight={handleMidnight}
           hasCelebrated={hasCelebrated}
+          hideClock={showFinalCountdown || showCelebration}
         />
       </div>
     </>
