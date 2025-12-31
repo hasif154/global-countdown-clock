@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Country } from "@/data/countries";
 import { DigitalClock } from "./DigitalClock";
+import { FinalCountdownVideo } from "./FinalCountdownVideo";
 import { MidnightVideo } from "./MidnightVideo";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -11,21 +12,35 @@ interface CountdownScreenProps {
 }
 
 export function CountdownScreen({ country, onBack }: CountdownScreenProps) {
-  const [showVideo, setShowVideo] = useState(false);
+  const [showFinalCountdown, setShowFinalCountdown] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const [hasCelebrated, setHasCelebrated] = useState(false);
 
-  const handleMidnight = () => {
-    setShowVideo(true);
-    setHasCelebrated(true);
-  };
+  const handleSixSecondsLeft = useCallback(() => {
+    setShowFinalCountdown(true);
+  }, []);
 
-  const handleVideoEnd = () => {
-    setShowVideo(false);
-  };
+  const handleMidnight = useCallback(() => {
+    setHasCelebrated(true);
+  }, []);
+
+  const handleFinalCountdownEnd = useCallback(() => {
+    setShowFinalCountdown(false);
+    setShowCelebration(true);
+    setHasCelebrated(true);
+  }, []);
+
+  const handleCelebrationEnd = useCallback(() => {
+    setShowCelebration(false);
+  }, []);
 
   return (
     <>
-      {showVideo && <MidnightVideo onVideoEnd={handleVideoEnd} />}
+      {showFinalCountdown && (
+        <FinalCountdownVideo onVideoEnd={handleFinalCountdownEnd} />
+      )}
+
+      {showCelebration && <MidnightVideo onVideoEnd={handleCelebrationEnd} />}
 
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4">
         <Button
@@ -39,6 +54,7 @@ export function CountdownScreen({ country, onBack }: CountdownScreenProps) {
 
         <DigitalClock
           country={country}
+          onSixSecondsLeft={handleSixSecondsLeft}
           onMidnight={handleMidnight}
           hasCelebrated={hasCelebrated}
         />
